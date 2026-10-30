@@ -1,3 +1,5 @@
+![Banner](banner.png)
+
 # codeintel-Data-Flow-Analyzer
 Traces the flow of sensitive data (e.g., user inputs, credentials) to identify potential information leaks or injection points. - Focused on Tools for static code analysis, vulnerability scanning, and code quality assurance
 
