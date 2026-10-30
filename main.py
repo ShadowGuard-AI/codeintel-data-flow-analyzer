@@ -116,6 +116,11 @@ def analyze_data_flow(source_file: str, sensitive_data: List[str]) -> List[Tuple
                 for keyword in sensitive_data:
                     if keyword in line:
                         findings.append((i, line.strip()))
+                        # One finding per line. A line naming two
+                        # keywords is still one line of flow; the old
+                        # loop appended the identical (line, text)
+                        # tuple once per keyword it matched.
+                        break
     except FileNotFoundError:
         logging.error(f"Error: Source file '{source_file}' not found.")
     except Exception as e:
@@ -143,7 +148,13 @@ def main():
         sys.exit(1)
 
     source_file = args.source_file
-    sensitive_data = [s.strip() for s in args.sensitive_data.split(",")] # Split and strip whitespace.
+    # Split and strip whitespace, and drop empty entries: a trailing
+    # comma used to leave an empty keyword in the list, and an empty
+    # string is contained in every line, so every line was flagged.
+    sensitive_data = [s.strip() for s in args.sensitive_data.split(",") if s.strip()]
+    if not sensitive_data:
+        logging.error("Error: At least one sensitive data keyword must be specified.")
+        sys.exit(1)
 
     logging.info(f"Starting data flow analysis on '{source_file}' for sensitive data: {sensitive_data}")
 
@@ -170,6 +181,7 @@ def main():
             logging.info(f"Analysis results saved to '{args.output_file}'.")
         except Exception as e:
             logging.error(f"Error writing results to file '{args.output_file}': {e}")
+            sys.exit(1)
     else:
         print("Analysis Results:")
         import json
