@@ -13,7 +13,7 @@ def setup_argparse():
     """
     Sets up the argument parser for the command-line interface.
     """
-    parser = argparse.ArgumentParser(description="Traces the flow of sensitive data in Python code to identify potential information leaks or injection points.",
+    parser = argparse.ArgumentParser(description="Lists every line in a Python source file that mentions a sensitive keyword, and runs bandit on the file.",
                                      epilog="Example usage: python data_flow_analyzer.py --source_file my_app.py --sensitive_data password,api_key")
 
     parser.add_argument("--source_file", required=True, help="Path to the Python source file to analyze.")
@@ -48,7 +48,7 @@ def validate_input(args: argparse.Namespace) -> bool:
     return True
 
 
-def run_bandit(source_file: str, severity_level: str, confidence_level: str) -> List[Dict]:
+def run_bandit(source_file: str, severity_level: str, confidence_level: str):
     """
     Runs Bandit security linter and returns the findings.
 
@@ -82,20 +82,20 @@ def run_bandit(source_file: str, severity_level: str, confidence_level: str) -> 
             import json
             try:
                 bandit_output = json.loads(stdout.decode())
-                return bandit_output.get("results", [])  # type: ignore
+                return bandit_output.get("results", []), "completed"
             except json.JSONDecodeError as e:
                 logging.error(f"Error decoding Bandit JSON output: {e}")
-                return []
+                return [], "parse_error"
         else:
-            logging.info("Bandit found no issues.")
-            return []
+            logging.error("Bandit produced no output.")
+            return [], "failed"
 
     except FileNotFoundError:
         logging.error("Error: Bandit is not installed. Please install it using 'pip install bandit'.")
-        return []
+        return [], "not_installed"
     except Exception as e:
         logging.error(f"Error running Bandit: {e}")
-        return []
+        return [], "failed"
 
 
 def analyze_data_flow(source_file: str, sensitive_data: List[str]) -> List[Tuple[int, str]]:
@@ -156,11 +156,11 @@ def main():
         logging.error("Error: At least one sensitive data keyword must be specified.")
         sys.exit(1)
 
-    logging.info(f"Starting data flow analysis on '{source_file}' for sensitive data: {sensitive_data}")
+    logging.info(f"Starting keyword line analysis on '{source_file}' for sensitive data: {sensitive_data}")
 
     # Run bandit security linter
     logging.info("Running Bandit security linter...")
-    bandit_findings = run_bandit(source_file, args.bandit_severity_threshold, args.bandit_confidence_threshold)
+    bandit_findings, bandit_status = run_bandit(source_file, args.bandit_severity_threshold, args.bandit_confidence_threshold)
 
     # Perform custom data flow analysis
     logging.info("Performing custom data flow analysis...")
@@ -169,7 +169,8 @@ def main():
     # Combine and present the findings
     all_findings = {
         "bandit": bandit_findings,
-        "data_flow": data_flow_findings,
+        "bandit_status": bandit_status,
+        "keyword_lines": data_flow_findings,
     }
 
     # Output the results
@@ -187,6 +188,9 @@ def main():
         import json
         print(json.dumps(all_findings, indent=4))
 
+    if bandit_status != "completed":
+        logging.error(f"Bandit did not complete (status: {bandit_status}). Exiting with failure.")
+        sys.exit(1)
     logging.info("Data flow analysis completed.")
 
 
