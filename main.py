@@ -65,6 +65,9 @@ def run_bandit(source_file: str, severity_level: str, confidence_level: str):
             "bandit",
             "-r",
             "-q",
+            # I pass the threshold words straight to bandit flags. If a
+            # future bandit changes what those flags take, this call fails
+            # as a bandit error rather than as my own validation message.
             "-s", severity_level,
             "-c", confidence_level,
             "-f", "json",
@@ -114,6 +117,9 @@ def analyze_data_flow(source_file: str, sensitive_data: List[str]) -> List[Tuple
         with open(source_file, "r") as f:
             for i, line in enumerate(f, 1):
                 for keyword in sensitive_data:
+                    # I match by plain substring, case included. The word password
+                    # inside a comment or a longer name counts, and Password with a
+                    # capital does not, so this list is lines to read, not a flow.
                     if keyword in line:
                         findings.append((i, line.strip()))
                         # One finding per line. A line naming two
@@ -188,6 +194,9 @@ def main():
         import json
         print(json.dumps(all_findings, indent=4))
 
+    # I check the bandit status only after the findings have been
+    # printed or saved. A failed bandit run still leaves its partial
+    # output behind, and the exit code is the part that says so.
     if bandit_status != "completed":
         logging.error(f"Bandit did not complete (status: {bandit_status}). Exiting with failure.")
         sys.exit(1)
