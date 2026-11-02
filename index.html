@@ -3,164 +3,69 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Codeintel Data Flow Analyzer: what it is, how it runs, where it stops</title>
-<meta name="description" content="Codeintel Data Flow Analyzer is one of my projects. The README in the repo is short, so this page sticks to what the files themselves show.">
+<title>codeintel-data-flow-analyzer: Star Party on the Mesa</title>
 <style>
-:root {
-  --bg: #121418; --panel: #1c2028; --ink: #e8ecf0;
-  --mut: #252b36;
-  --acc: #5cc8e0; --acc2: #f0a05c;
-  --line: #1c2028;
-}
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink);
-  font-family: 'Trebuchet MS', sans-serif; line-height: 1.55; }
-code, pre, .mono { font-family: 'Courier New', monospace; }
-a { color: var(--acc2); }
-.hero { padding: 3rem 6vw 1rem; }
-.hero img.banner { width: 100%; height: auto; border: 1px solid var(--line);
-  border-radius: 10px; }
-.logo { width: 92px; height: 92px; border-radius: 18px;
-  border: 1px solid var(--line); }
-h1 { font-size: 2.4rem; margin: 0.4em 0 0.1em; }
-h2 { border-bottom: 2px solid var(--acc); padding-bottom: 0.2em;
-  margin-top: 2em; }
-.lede { font-size: 1.15rem; max-width: 62ch; }
-main { padding: 0 6vw 3rem; max-width: 1180px; margin: 0 auto; }
-.grid { display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-.card { background: var(--panel); border: 1px solid var(--line);
-  border-radius: 12px; padding: 1rem 1.2rem; }
-.card.pop { animation: rise 0.7s ease both; }
-@keyframes rise { from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: none; } }
-pre.code { background: #101014; color: #e8e6df; padding: 1rem 1.2rem;
-  border-radius: 12px; overflow-x: auto; font-size: 0.86rem;
-  border-left: 5px solid var(--acc); }
-table { border-collapse: collapse; width: 100%; }
-td, th { border-bottom: 1px solid var(--line); padding: 0.45rem 0.6rem;
-  text-align: left; }
-.shots { display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-.shots img { width: 100%; height: auto; border: 1px solid var(--line);
-  border-radius: 10px; background: #f4f1e8; }
-footer { padding: 2rem 6vw; border-top: 1px solid var(--line);
-  color: var(--mut); }
-.rail { display: flex; gap: 1.2rem; align-items: flex-start; }
-.rail nav { position: sticky; top: 1rem; min-width: 180px; }
-@media (max-width: 760px) { .rail { flex-direction: column; }
-  .rail nav { position: static; } }
-@media (prefers-reduced-motion: reduce) {
-  .card.pop { animation: none; } * { scroll-behavior: auto; } }
+@font-face{font-family:'Batang';src:url('fonts/Batang.ttf') format('truetype');}
+@font-face{font-family:'Archivo';src:url('fonts/Archivo.ttf') format('truetype');}
+:root{--ground:#2e4a7a;--panel:#8e949a;--head:#f2ecd9;--ink:#f4f2ea;--accent:#e07b39}
+*{box-sizing:border-box}body{margin:0;background:var(--ground);color:var(--ink);font-family:'Archivo',sans-serif;line-height:1.65}
+h1,h2,h3{font-family:'Batang',serif;color:var(--head)}
+.hero img.heroimg{width:100%;height:54vh;object-fit:cover;display:block}
+.hero .in,main,footer{max-width:1120px;margin:0 auto;padding:1rem 6vw 2rem}.logo{width:210px}
+nav{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0}
+.btn{display:inline-block;text-decoration:none;font-family:'Batang',serif;color:var(--head);background:var(--panel);border:2px solid var(--accent);border-radius:20px;padding:.75rem 1.2rem}
+.btn:hover{filter:brightness(1.12)}.btn:active{transform:translateY(2px)}.btn:focus-visible{outline:4px double var(--accent);outline-offset:3px}
+a{color:var(--head)}a:hover{color:var(--accent)}.btn::before{content:none}
+.plate{background:var(--panel);color:#1e1c24;padding:.4rem 1.5rem 1.3rem;margin:1.8rem 0;position:relative}
+.plate h2,.plate h3{color:#3a3040}
+pre{background:#22202a;color:#f4f2ea;padding:1rem;overflow-x:auto}
+.drops{height:14px;margin:1.6rem 0;border-top:2px solid var(--accent)}
+.callout{background:rgba(255,255,255,.55);border-left:8px solid var(--accent);padding:.2rem 1.3rem 1rem;margin:1.3rem 0}
+.flag{border:3px solid #c22e2e;padding:.2rem 1.2rem 1rem;margin:1.2rem 0}
+.entry{display:flex;gap:1rem;padding:.55rem 0;border-bottom:1px solid rgba(30,28,36,.22)}.entry b{min-width:210px}
 </style>
 </head>
-<body class="layout-poster">
-<!-- This page exists for codeintel-data-flow-analyzer alone: the layout (poster),
-     the colors, and the type were picked for this project, not
-     shared with the other project pages. The code block below is
-     copied from the file it names, line for line. If it looks
-     plain, that is because the project is plain, and I would
-     rather the page match the project than dress it up. The one
-     thing I will not do here is oversell: what this project does
-     not do is stated on the page, not hidden from it. -->
+<body>
 <header class="hero">
-  <img class="logo" src="assets/logo.png" alt="Codeintel Data Flow Analyzer logo">
-  <img class="banner" src="assets/banner.png" alt="">
-  <h1>Codeintel Data Flow Analyzer</h1>
-  <p class="mono"><a href="https://github.com/ShadowGuard-AI/codeintel-data-flow-analyzer">github.com/ShadowGuard-AI/codeintel-data-flow-analyzer</a></p>
+<img class="heroimg" src="assets/intro-banner.png" alt="A star party with no lettering: the mesa edge in flat stone, a chart corner lifting beneath its pinning stone, telescopes tipped toward dark, hooded torches glowing dim red between them, a folding table with charts and stones, cold coffee beside a chart, desert dropping away dark, thin cloud high at the horizon, and a sky thick with stars">
+<div class="in">
+<img class="logo" src="assets/logo.png" alt="One telescope in side view at dusk: a plain tube tilted up shallow on a tripod on flat mesa stone, desert dusk orange on the high rim, one star chart under the tripod pinned at one corner by a single stone, a small red capped lens cover hanging from the mount, and codeintel-data-flow-analyzer lettered below as a forecast entry">
+<h1>codeintel-data-flow-analyzer</h1>
+<p>An observing sheet read downward, dusk first and small hours last. The tool lists keyword lines and runs bandit. It does not trace data flow.</p>
+<nav>
+<a class="btn" href="#work">List the Keyword Lines</a>
+<a class="btn" href="#work">Run Bandit on This File</a>
+<a class="btn" href="#params">Write the Report to a File</a>
+<a class="btn" href="#params">Save Logs to a File</a>
+<a class="btn" href="#params">Show Help</a>
+</nav>
+</div>
 </header>
-
 <main>
-  <section class="rail">
-    <nav aria-label="on this page">
-      <p class="mono"><a href="#run">Run it</a><br>
-      <a href="#files">The files</a><br>
-      <a href="#sheets">The sheets</a><br>
-      <a href="https://github.com/ShadowGuard-AI/codeintel-data-flow-analyzer">The repo</a></p>
-    </nav>
-    <div>
-      <p class="lede">Codeintel Data Flow Analyzer is one of my projects. The README in the repo is short, so this page sticks to what the files themselves show.</p>
-      <div class="grid">
-        <div class="card pop"><h3>What it is</h3>
-          <p>Codeintel Data Flow Analyzer: 5 files, 219 counted
-          lines across Python 194, Markdown 22, Text 3. One job, done in the
-          open, in files you can read.</p></div>
-        <div class="card pop"><h3>The biggest piece</h3>
-          <p><code>main.py</code> carries the most
-          lines. If the project grows, that file is where the growth
-          lands first, for better or worse.</p></div>
-        <div class="card pop"><h3>The honest gap</h3>
-          <p>No test files yet. That is the honest gap, and the roadmap in the visuals folder says what the first one should cover.</p></div>
-      </div>
-      <section id="run">
-        <h2>Run it</h2>
-        <p>The repo README has the exact commands for this one. The
-        shape is the shape for most of my projects: clone it, read the
-        top file first so you know what will happen, then run it on
-        something you do not mind breaking.</p>
-        <p class="mono">$ git clone https://github.com/ShadowGuard-AI/codeintel-data-flow-analyzer.git<br>$ cd codeintel-data-flow-analyzer</p>
-      </section>
-      
-  <section aria-label="real code">
-    <h2>The code, as it sits in the repo</h2>
-    <p>From <code>main.py</code>, line 10 on. I did
-    not tidy it for the page. What you see is what the file has.</p>
-    <pre class="code"><code>logging.basicConfig(level=logging.INFO, format=&#x27;%(asctime)s - %(levelname)s - %(message)s&#x27;)
-
-def setup_argparse():
-    &quot;&quot;&quot;
-    Sets up the argument parser for the command-line interface.
-    &quot;&quot;&quot;
-    parser = argparse.ArgumentParser(description=&quot;Traces the flow of sensitive data in Python code to identify potential information leaks or injection points.&quot;,
-                                     epilog=&quot;Example usage: python data_flow_analyzer.py --source_file my_app.py --sensitive_data password,api_key&quot;)
-
-    parser.add_argument(&quot;--source_file&quot;, required=True, help=&quot;Path to the Python source file to analyze.&quot;)
-    parser.add_argument(&quot;--sensitive_data&quot;, required=True, help=&quot;Comma-separated list of sensitive data keywords to track (e.g., password, api_key).&quot;)
-    parser.add_argument(&quot;--output_file&quot;, help=&quot;Optional file to write the analysis results to.&quot;)
-    parser.add_argument(&quot;--log_file&quot;, help=&quot;Optional file to save logs to.&quot;)
-    parser.add_argument(&quot;--bandit_severity_threshold&quot;, type=str, default=&quot;MEDIUM&quot;, choices=[&quot;LOW&quot;, &quot;MEDIUM&quot;, &quot;HIGH&quot;], help=&quot;Threshold severity for bandit findings (LOW, MEDIUM, HIGH). Default is MEDIUM.&quot;)
-    parser.add_argument(&quot;--bandit_confidence_threshold&quot;, type=str, default=&quot;MEDIUM&quot;, choices=[&quot;LOW&quot;, &quot;MEDIUM&quot;, &quot;HIGH&quot;], help=&quot;Threshold confidence for bandit findings (LOW, MEDIUM, HIGH). Default is MEDIUM.&quot;)
-
-
-    return parser.parse_args()
-
-
-def validate_input(args: argparse.Namespace) -&gt; bool:
-    &quot;&quot;&quot;</code></pre>
-  </section>
-      <section id="files">
-        <h2>The files that matter</h2>
-        <table><tr><th>File</th><th>Lines</th></tr>
-        <tr><td><code>main.py</code></td><td>194</td></tr>
-        <tr><td><code>README.md</code></td><td>22</td></tr>
-        <tr><td><code>requirements.txt</code></td><td>3</td></tr>
-        <tr><td><code>banner.png</code></td><td>0</td></tr>
-        <tr><td><code>logo.png</code></td><td>0</td></tr>
-        </table>
-        <p>Names doing the work: <span class="mono">setup_argparse, validate_input, run_bandit, analyze_data_flow, main</span>.</p>
-      </section>
-      <section id="sheets">
-        <h2>Drawn by hand</h2>
-        <p>I sketch my projects on notebook paper so I have to
-        understand them well enough to draw them. The full set,
-        with the counts and how they were counted, is the
-        <a href="https://github.com/ShadowGuard-AI/codeintel-data-flow-analyzer/tree/main/codeintel-data-flow-analyzer-Visuals">codeintel-data-flow-analyzer-Visuals</a>
-        folder in the repo. Nothing is drawn over the binder holes.
-        That is a rule, not a style.</p>
-        <div class="shots">
-          <img src="assets/architecture.png" alt="Hand drawn architecture sheet for Codeintel Data Flow Analyzer">
-          <img src="assets/flowchart.png" alt="Hand drawn flowchart sheet for Codeintel Data Flow Analyzer">
-          <img src="assets/product-map.png" alt="Hand drawn product map sheet for Codeintel Data Flow Analyzer">
-        </div>
-      </section>
-    </div>
-  </section>
+<section class="plate" id="work"><h2>Keyword Lines, Not Data Flow</h2>
+<p>codeintel-data-flow-analyzer lists every line in a Python source file that mentions a sensitive keyword, and runs bandit on the file. Matches are unfiltered substring hits, comments included. The tool does not trace data flow and does not identify leaks or injection points.</p><div class="callout"><h3>Matched Lines Are Written in Full</h3><p>Matched lines go into the local report in full, under the report section named keyword_lines. A real secret sitting on a matched line will therefore appear in the report file in full.</p></div><p>Keywords match as plain substrings, case included. A keyword inside a comment counts. A keyword inside a longer name counts. The same word with a different capital does not count. A line naming two keywords still gets listed once.</p>
+</section>
+<div class="drops"></div>
+<section class="plate"><h2>Install, One Clone Line, Flagged</h2>
+<pre>git clone https://github.com/ShadowStrikeHQ/codeintel-data-flow-analyzer</pre><div class="flag"><h3>Clone Line Points to the Wrong Mesa</h3><p>That address points to ShadowStrikeHQ, not to ShadowGuard-AI. It is shown flagged, not quietly fixed. After the clone the README offers no change of directory step and no install step.</p></div><p>Repository fact, not a README fact: the repo carries a requirements.txt. That file states that main.py itself uses only the standard library. It also names bandit as the external scanner the code invokes by name.</p>
+</section>
+<div class="drops"></div>
+<section class="plate"><h2>Usage, the Placeholder and the Parser Line</h2>
+<pre>./codeintel-data-flow-analyzer [params]</pre><p>That is the README usage line, shown flagged as a placeholder. Alongside it, what the argument parser in main.py genuinely accepts:</p><pre>python3 main.py --source_file FILE --sensitive_data KEYWORDS</pre><p>Both --source_file and --sensitive_data are required. Omit either one and the run is refused as a usage error. The README line is not rewritten to look correct. The gap between the two lines is the point.</p>
+</section>
+<div class="drops"></div>
+<section class="plate" id="params"><h2>The Seven Log Entries</h2>
+<div class="entry"><b>-h</b><span>Show help message and exit.</span></div><div class="entry"><b>--source_file</b><span>Path to the Python source file to analyze. Required, from the parser.</span></div><div class="entry"><b>--sensitive_data</b><span>No description provided. Beneath, from the parser: a comma separated list of sensitive data keywords to track, for example password, api_key. Required.</span></div><div class="entry"><b>--output_file</b><span>Optional file to write the analysis results to.</span></div><div class="entry"><b>--log_file</b><span>Optional file to save logs to.</span></div><div class="entry"><b>--bandit_severity_threshold</b><span>No description provided. Beneath, from the parser: the threshold severity for bandit findings, one of LOW, MEDIUM, or HIGH, default MEDIUM.</span></div><div class="entry"><b>--bandit_confidence_threshold</b><span>No description provided. Beneath, from the parser: the threshold confidence for bandit findings, one of LOW, MEDIUM, or HIGH, default MEDIUM.</span></div>
+</section>
+<div class="drops"></div>
+<section class="plate"><h2>Bandit Findings and Bandit Status</h2>
+<h3>When Bandit Fails the Run Fails</h3><p>If bandit is missing, the run exits 1. If bandit output cannot be parsed, the run also exits 1. The JSON report records a bandit_status field naming the failure. The report is printed or saved before that exit, so a failed bandit run still leaves its keyword lines behind, and its bandit status too. A source file that does not exist is refused before any scanning, with an error and exit 1. Nowhere on this page is a completed run described as a leak found or a flow traced. The tool lists lines. The tool runs bandit. That is the whole of its work.</p>
+</section>
+<div class="drops"></div>
+<section class="plate"><h2>Licence, Closing the Sheet</h2>
+<pre>Copyright (c) ShadowStrikeHQ</pre><p>The README ends with that line, printed as it stands and flagged beside the install line fault. The repository LICENSE file carries the MIT License. Both facts are shown, and neither is forced to agree with the other.</p>
+</section>
 </main>
-<footer>
-  <p>Codeintel Data Flow Analyzer is one of my projects. This page was written
-  from the repo itself on 2026-10-30: the counts are the
-  repo's counts, the code is the repo's code, and the gaps are the
-  repo's gaps.</p>
-</footer>
+<footer><p>Theme: Star Party on the Mesa. Type: Batang for display, Archivo for reading, both SIL Open Font License 1.1.</p></footer>
 </body>
 </html>
