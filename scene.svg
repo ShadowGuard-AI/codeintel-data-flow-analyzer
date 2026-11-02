@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" role="img" aria-label="The mesa top in three depths: stars steady while thin cloud layers cross high and slow, chart corners lifting under their weighting stones in the night breeze with hooded red torches flickering at the hood edge and one telescope tube easing through a small arc to a new star, and cold coffee in its flask forming a faint skin once over a long interval">
+<rect x="0" y="0" width="1200" height="300" fill="#1d3358"/>
+<g fill="#eef"><circle cx="120" cy="36" r="2.5"/><circle cx="330" cy="64" r="2.5"/><circle cx="560" cy="30" r="2.5"/><circle cx="760" cy="58" r="2.5"/><circle cx="1020" cy="34" r="2.5"/><circle cx="940" cy="96" r="2"/></g>
+<g opacity="0.55"><animateTransform attributeName="transform" type="translate" values="-260 0;260 0;-260 0" dur="60s" repeatCount="indefinite"/><ellipse cx="600" cy="70" rx="330" ry="15" fill="#c4b2be"/></g>
+<rect x="0" y="216" width="1200" height="84" fill="#686460"/>
+<g><animateTransform attributeName="transform" type="rotate" values="0 430 218;-7 430 218;-7 430 218;0 430 218" keyTimes="0;0.4;0.7;1" dur="30s" repeatCount="indefinite"/><polygon points="352,196 512,168 520,190 360,218" fill="#8e949a"/><line x1="360" y1="214" x2="516" y2="186" stroke="#2e4a7a" stroke-width="4"/></g>
+<line x1="404" y1="212" x2="382" y2="262" stroke="#282624" stroke-width="5"/><line x1="452" y1="212" x2="474" y2="262" stroke="#282624" stroke-width="5"/>
+<g><polygon points="620,252 760,248 768,266 628,270" fill="#f8f4e4"/><animateTransform attributeName="transform" type="rotate" values="0 632 268;-5 632 268;0 632 268" dur="11s" repeatCount="indefinite"/></g>
+<ellipse cx="742" cy="246" rx="15" ry="10" fill="#504c48"/>
+<g><circle cx="250" cy="238" r="7" fill="#c22e2e"><animate attributeName="opacity" values="1;0.72;1;0.85;1" dur="3.5s" repeatCount="indefinite"/></circle><rect x="242" y="226" width="16" height="9" fill="#1e1e20"/></g>
+<g><rect x="880" y="238" width="26" height="38" fill="#d6dee2" stroke="#5a5a5e" stroke-width="2"/><ellipse cx="893" cy="244" rx="10" ry="3" fill="#e8e2d2" opacity="0"><animate attributeName="opacity" values="0;0;0.85;0.85" keyTimes="0;0.45;0.8;1" dur="36s" repeatCount="indefinite"/></ellipse></g>
+</svg>

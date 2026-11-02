@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 40" role="img" aria-label="Major separator: a barometer needle trembling toward storm and back across the full rule, panel grey on stratosphere blue">
+<rect x="0" y="0" width="1200" height="40" fill="#2e4a7a"/>
+<line x1="0" y1="30" x2="1200" y2="30" stroke="#8e949a" stroke-width="2"/>
+<line x1="100" y1="6" x2="100" y2="14" stroke="#d8dce2" stroke-width="2"/><line x1="200" y1="6" x2="200" y2="14" stroke="#d8dce2" stroke-width="2"/><line x1="300" y1="6" x2="300" y2="14" stroke="#d8dce2" stroke-width="2"/><line x1="400" y1="6" x2="400" y2="14" stroke="#d8dce2" stroke-width="2"/><line x1="500" y1="6" x2="500" y2="14" stroke="#d8dce2" stroke-width="2"/><line x1="600" y1="6" x2="600" y2="14" stroke="#d8dce2" stroke-width="2"/><line x1="700" y1="6" x2="700" y2="14" stroke="#d8dce2" stroke-width="2"/><line x1="800" y1="6" x2="800" y2="14" stroke="#d8dce2" stroke-width="2"/><line x1="900" y1="6" x2="900" y2="14" stroke="#d8dce2" stroke-width="2"/><line x1="1000" y1="6" x2="1000" y2="14" stroke="#d8dce2" stroke-width="2"/><line x1="1100" y1="6" x2="1100" y2="14" stroke="#d8dce2" stroke-width="2"/>
+<g><animateTransform attributeName="transform" type="rotate" values="0 600 30;-16 600 30;10 600 30;-6 600 30;0 600 30" dur="7s" repeatCount="indefinite"/><line x1="600" y1="30" x2="600" y2="8" stroke="#e07b39" stroke-width="3"/></g>
+<circle cx="600" cy="30" r="5" fill="#8e949a"/>
+</svg>
