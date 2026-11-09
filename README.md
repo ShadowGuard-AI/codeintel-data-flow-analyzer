@@ -1,10 +1,10 @@
-![A star party with no lettering: the mesa edge in flat stone, a chart corner lifting beneath its pinning stone, telescopes tipped toward dark, hooded torches glowing dim red between them, a folding table with charts and stones, cold coffee beside a chart, desert dropping away dark, thin cloud high at the horizon, and a sky thick with stars](intro-banner.png)
+![The comber's hand lifting one shell from the wrack line close up, kelp strands and a tarred rope end beside it on the wet sand and the line running soft behind](intro-banner.png)
 
 # codeintel-Data-Flow-Analyzer
 
-![An hour past sunset on the mesa: telescopes in a loose row each pointing at a different star, sky grading from desert dusk orange at the horizon into stratosphere blue, charts weighted with stones on a folding table and on the ground, hooded red torches dim along the path, cold coffee beside a chart, thin high cloud at the far edge, and codeintel-data-flow-analyzer chalked by hand on the side of the table](banner.png)
+![A beachcomber walking the dark strandline at low tide with a canvas sack, stooping toward the line of shells, rope, and feathers along the wet sand, gulls standing off on the dry sand](banner.png)
 
-![One telescope in side view at dusk: a plain tube tilted up shallow on a tripod on flat mesa stone, desert dusk orange on the high rim, one star chart under the tripod pinned at one corner by a single stone, a small red capped lens cover hanging from the mount, and codeintel-data-flow-analyzer lettered below as a forecast entry](logo.png)
+![One bleached scallop shell resting on the dark wrack line of kelp and rope on wet sand](logo.png)
 
 ![The mesa top in three depths: stars steady while thin cloud layers cross high and slow, chart corners lifting under their weighting stones in the night breeze with hooded red torches flickering at the hood edge and one telescope tube easing through a small arc to a new star, and cold coffee in its flask forming a faint skin once over a long interval](scene.svg)
 

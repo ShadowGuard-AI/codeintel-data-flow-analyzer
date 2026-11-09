@@ -3,69 +3,101 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>codeintel-data-flow-analyzer: Star Party on the Mesa</title>
+<title>codeintel-data-flow-analyzer: The Strandline</title>
 <style>
-@font-face{font-family:'Batang';src:url('fonts/Batang.ttf') format('truetype');}
-@font-face{font-family:'Archivo';src:url('fonts/Archivo.ttf') format('truetype');}
-:root{--ground:#2e4a7a;--panel:#8e949a;--head:#f2ecd9;--ink:#f4f2ea;--accent:#e07b39}
-*{box-sizing:border-box}body{margin:0;background:var(--ground);color:var(--ink);font-family:'Archivo',sans-serif;line-height:1.65}
-h1,h2,h3{font-family:'Batang',serif;color:var(--head)}
-.hero img.heroimg{width:100%;height:54vh;object-fit:cover;display:block}
-.hero .in,main,footer{max-width:1120px;margin:0 auto;padding:1rem 6vw 2rem}.logo{width:210px}
-nav{display:flex;gap:1rem;flex-wrap:wrap;margin:1.2rem 0}
-.btn{display:inline-block;text-decoration:none;font-family:'Batang',serif;color:var(--head);background:var(--panel);border:2px solid var(--accent);border-radius:20px;padding:.75rem 1.2rem}
-.btn:hover{filter:brightness(1.12)}.btn:active{transform:translateY(2px)}.btn:focus-visible{outline:4px double var(--accent);outline-offset:3px}
-a{color:var(--head)}a:hover{color:var(--accent)}.btn::before{content:none}
-.plate{background:var(--panel);color:#1e1c24;padding:.4rem 1.5rem 1.3rem;margin:1.8rem 0;position:relative}
-.plate h2,.plate h3{color:#3a3040}
-pre{background:#22202a;color:#f4f2ea;padding:1rem;overflow-x:auto}
-.drops{height:14px;margin:1.6rem 0;border-top:2px solid var(--accent)}
-.callout{background:rgba(255,255,255,.55);border-left:8px solid var(--accent);padding:.2rem 1.3rem 1rem;margin:1.3rem 0}
-.flag{border:3px solid #c22e2e;padding:.2rem 1.2rem 1rem;margin:1.2rem 0}
-.entry{display:flex;gap:1rem;padding:.55rem 0;border-bottom:1px solid rgba(30,28,36,.22)}.entry b{min-width:210px}
+@font-face { font-family: "Solway"; src: url("fonts/Solway-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Andika"; src: url("fonts/Andika-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Andika"; src: url("fonts/Andika-700.woff2") format("woff2"); font-weight: 700; }
+:root {
+  --paper: #f4f4ef; --cream: #e4e6da; --ink: #262b24; --soft: #5d685a;
+  --accent: #46684a; --deep: #22301f; --line: #c9cfbc; --card: #ffffff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--cream); color: var(--ink); font-family: "Andika", sans-serif; line-height: 1.55; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 20px 64px; }
+header.hero { text-align: center; padding: 52px 0 8px; }
+img.hero-logo { width: min(430px, 82vw); border-radius: 10px; box-shadow: 0 10px 34px rgba(30,36,28,.22); }
+h1, h2 { font-family: "Solway", serif; line-height: 1.15; }
+h1 { font-size: clamp(26px, 5vw, 44px); margin: 26px 0 6px; }
+.tagline { color: var(--soft); font-size: 19px; margin: 0 auto; max-width: 680px; }
+.btns { margin: 22px 0 6px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+a.btn { font-family: "Solway", serif; text-decoration: none; padding: 11px 22px; border-radius: 999px; border: 2px solid var(--accent); color: var(--accent); background: transparent; }
+a.btn.solid { background: var(--deep); border-color: var(--deep); color: #fff; }
+figure { margin: 30px 0; }
+figure img { width: 100%; border-radius: 10px; display: block; box-shadow: 0 8px 28px rgba(30,36,28,.18); }
+figcaption { color: var(--soft); font-size: 15px; text-align: center; margin-top: 9px; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 34px 0; }
+.fact { background: var(--card); border: 1px solid var(--line); border-top: 5px solid var(--accent); border-radius: 8px; padding: 14px 16px; }
+.fact b { display: block; font-family: "Solway", serif; font-size: 15px; letter-spacing: .04em; text-transform: uppercase; color: var(--accent); margin-bottom: 4px; }
+section { margin: 38px 0; }
+h2 { font-size: 27px; margin: 0 0 12px; border-bottom: 2px solid var(--line); padding-bottom: 7px; }
+code, pre { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+pre { background: #1f261c; color: #eef2e4; padding: 15px 18px; border-radius: 8px; overflow-x: auto; font-size: 14.5px; }
+table { border-collapse: collapse; width: 100%; background: var(--card); }
+th, td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; vertical-align: top; }
+th { font-family: "Solway", serif; background: var(--cream); }
+.hold { background: #f6f1e6; border: 1px solid #ddd2b4; border-left: 6px solid var(--accent); border-radius: 8px; padding: 16px 20px; }
+.hold h2 { border: none; padding: 0; }
+.hold ul { margin: 8px 0 4px; padding-left: 20px; }
+footer { margin-top: 52px; border-top: 2px solid var(--line); padding-top: 16px; color: var(--soft); font-size: 14.5px; text-align: center; }
 </style>
 </head>
 <body>
+<div class="wrap">
 <header class="hero">
-<img class="heroimg" src="assets/intro-banner.png" alt="A star party with no lettering: the mesa edge in flat stone, a chart corner lifting beneath its pinning stone, telescopes tipped toward dark, hooded torches glowing dim red between them, a folding table with charts and stones, cold coffee beside a chart, desert dropping away dark, thin cloud high at the horizon, and a sky thick with stars">
-<div class="in">
-<img class="logo" src="assets/logo.png" alt="One telescope in side view at dusk: a plain tube tilted up shallow on a tripod on flat mesa stone, desert dusk orange on the high rim, one star chart under the tripod pinned at one corner by a single stone, a small red capped lens cover hanging from the mount, and codeintel-data-flow-analyzer lettered below as a forecast entry">
-<h1>codeintel-data-flow-analyzer</h1>
-<p>An observing sheet read downward, dusk first and small hours last. The tool lists keyword lines and runs bandit. It does not trace data flow.</p>
-<nav>
-<a class="btn" href="#work">List the Keyword Lines</a>
-<a class="btn" href="#work">Run Bandit on This File</a>
-<a class="btn" href="#params">Write the Report to a File</a>
-<a class="btn" href="#params">Save Logs to a File</a>
-<a class="btn" href="#params">Show Help</a>
-</nav>
-</div>
+  <img class="hero-logo" src="assets/logo.png" alt="One bleached scallop shell resting on the dark wrack line of kelp and rope on wet sand">
+  <h1>codeintel-data-flow-analyzer</h1>
+  <p class="tagline">The Strandline. A command line tool that lists every line of one Python file that mentions a watched keyword, records each line in full, and runs bandit over the same file.</p>
+  <div class="btns">
+    <a class="btn solid" href="https://github.com/ShadowGuard-AI/codeintel-data-flow-analyzer">The repository</a>
+    <a class="btn" href="https://github.com/ShadowGuard-AI/codeintel-data-flow-analyzer/blob/main/main.py">main.py</a>
+  </div>
 </header>
-<main>
-<section class="plate" id="work"><h2>Keyword Lines, Not Data Flow</h2>
-<p>codeintel-data-flow-analyzer lists every line in a Python source file that mentions a sensitive keyword, and runs bandit on the file. Matches are unfiltered substring hits, comments included. The tool does not trace data flow and does not identify leaks or injection points.</p><div class="callout"><h3>Matched Lines Are Written in Full</h3><p>Matched lines go into the local report in full, under the report section named keyword_lines. A real secret sitting on a matched line will therefore appear in the report file in full.</p></div><p>Keywords match as plain substrings, case included. A keyword inside a comment counts. A keyword inside a longer name counts. The same word with a different capital does not count. A line naming two keywords still gets listed once.</p>
+<figure>
+  <img src="assets/intro-banner.png" alt="The comber's hand lifting one shell from the wrack line close up, kelp strands and a tarred rope end beside it on the wet sand and the line running soft behind">
+  <figcaption>One item picked up off the line and read in full.</figcaption>
+</figure>
+
+<div class="facts">
+  <div class="fact"><b>Input</b>One Python file and a comma separated list of watched keywords; both options are required</div>
+  <div class="fact"><b>Keyword pass</b>A plain case sensitive substring match, comments included; each matching line is recorded once however many keywords it names</div>
+  <div class="fact"><b>Report</b>The matched lines are written into the report in full under keyword_lines, with bandit's findings and a bandit_status field beside them</div>
+  <div class="fact"><b>Exit</b>Any bandit failure, not installed, no output, or output that will not parse, ends the run at exit 1 after the report is printed or saved</div>
+</div>
+<section>
+  <h2>Usage</h2>
+  <pre>python3 main.py --source_file FILE --sensitive_data KEYWORDS [--output_file FILE] [--log_file FILE] [--bandit_severity_threshold MEDIUM] [--bandit_confidence_threshold MEDIUM]</pre>
+  <p>The word inside a comment or a longer name counts; the capitalised spelling does not. The two bandit thresholds are passed straight to bandit's own flags and default to MEDIUM, as the code's help text states; the README parameter list gives the thresholds and the keyword option as No description provided.</p>
+<table>
+    <tr><th>Option</th><th>What it does</th></tr>
+    <tr><td><code>--source_file</code></td><td>The Python file to read. Required.</td></tr>
+    <tr><td><code>--sensitive_data</code></td><td>The comma separated keywords to watch for. Required.</td></tr>
+    <tr><td><code>--output_file</code></td><td>Where the report is saved.</td></tr>
+    <tr><td><code>--log_file</code></td><td>Where the log is written.</td></tr>
+    <tr><td><code>--bandit_severity_threshold</code></td><td>Bandit's severity floor. Default MEDIUM.</td></tr>
+    <tr><td><code>--bandit_confidence_threshold</code></td><td>Bandit's confidence floor. Default MEDIUM.</td></tr>
+  </table>
 </section>
-<div class="drops"></div>
-<section class="plate"><h2>Install, One Clone Line, Flagged</h2>
-<pre>git clone https://github.com/ShadowStrikeHQ/codeintel-data-flow-analyzer</pre><div class="flag"><h3>Clone Line Points to the Wrong Mesa</h3><p>That address points to ShadowStrikeHQ, not to ShadowGuard-AI. It is shown flagged, not quietly fixed. After the clone the README offers no change of directory step and no install step.</p></div><p>Repository fact, not a README fact: the repo carries a requirements.txt. That file states that main.py itself uses only the standard library. It also names bandit as the external scanner the code invokes by name.</p>
+<figure>
+  <img src="assets/banner.png" alt="A beachcomber walking the dark strandline at low tide with a canvas sack, stooping toward the line of shells, rope, and feathers along the wet sand, gulls standing off on the dry sand">
+  <figcaption>The whole line walked, item by item, nothing skipped.</figcaption>
+</figure>
+<section class="hold">
+  <h2>What the tool does not do</h2>
+  <ul>
+    <li>No data flow is traced. The name and the GitHub description promise flow tracing and the identification of leaks, and the code does neither: it matches substrings and lists lines.</li>
+    <li>No line is judged beyond the match itself. A keyword in a comment counts exactly like one in code.</li>
+    <li>Matched lines are written into the report in full, so a real secret sitting on a matched line lands in the report file in full. Treat the report as sensitive.</li>
+    <li>Bandit is the only judgement in the run, and it is bandit's, relayed with its status.</li>
+  </ul>
 </section>
-<div class="drops"></div>
-<section class="plate"><h2>Usage, the Placeholder and the Parser Line</h2>
-<pre>./codeintel-data-flow-analyzer [params]</pre><p>That is the README usage line, shown flagged as a placeholder. Alongside it, what the argument parser in main.py genuinely accepts:</p><pre>python3 main.py --source_file FILE --sensitive_data KEYWORDS</pre><p>Both --source_file and --sensitive_data are required. Omit either one and the run is refused as a usage error. The README line is not rewritten to look correct. The gap between the two lines is the point.</p>
+<section>
+  <h2>Requirements</h2>
+  <p>Python with bandit, the external scanner main.py invokes by name; the requirements file lists it under a comment.</p>
 </section>
-<div class="drops"></div>
-<section class="plate" id="params"><h2>The Seven Log Entries</h2>
-<div class="entry"><b>-h</b><span>Show help message and exit.</span></div><div class="entry"><b>--source_file</b><span>Path to the Python source file to analyze. Required, from the parser.</span></div><div class="entry"><b>--sensitive_data</b><span>No description provided. Beneath, from the parser: a comma separated list of sensitive data keywords to track, for example password, api_key. Required.</span></div><div class="entry"><b>--output_file</b><span>Optional file to write the analysis results to.</span></div><div class="entry"><b>--log_file</b><span>Optional file to save logs to.</span></div><div class="entry"><b>--bandit_severity_threshold</b><span>No description provided. Beneath, from the parser: the threshold severity for bandit findings, one of LOW, MEDIUM, or HIGH, default MEDIUM.</span></div><div class="entry"><b>--bandit_confidence_threshold</b><span>No description provided. Beneath, from the parser: the threshold confidence for bandit findings, one of LOW, MEDIUM, or HIGH, default MEDIUM.</span></div>
-</section>
-<div class="drops"></div>
-<section class="plate"><h2>Bandit Findings and Bandit Status</h2>
-<h3>When Bandit Fails the Run Fails</h3><p>If bandit is missing, the run exits 1. If bandit output cannot be parsed, the run also exits 1. The JSON report records a bandit_status field naming the failure. The report is printed or saved before that exit, so a failed bandit run still leaves its keyword lines behind, and its bandit status too. A source file that does not exist is refused before any scanning, with an error and exit 1. Nowhere on this page is a completed run described as a leak found or a flow traced. The tool lists lines. The tool runs bandit. That is the whole of its work.</p>
-</section>
-<div class="drops"></div>
-<section class="plate"><h2>Licence, Closing the Sheet</h2>
-<pre>Copyright (c) ShadowStrikeHQ</pre><p>The README ends with that line, printed as it stands and flagged beside the install line fault. The repository LICENSE file carries the MIT License. Both facts are shown, and neither is forced to agree with the other.</p>
-</section>
-</main>
-<footer><p>Theme: Star Party on the Mesa. Type: Batang for display, Archivo for reading, both SIL Open Font License 1.1.</p></footer>
+<footer>
+<p>The README of codeintel-data-flow-analyzer closes with a copyright line naming ShadowStrikeHQ, and its clone URL names the same stale org; the repository carries a separate LICENSE file headed MIT License. Site type is set in Solway and Andika, self-hosted under the SIL Open Font License.</p>
+</footer>
+</div>
 </body>
 </html>
